@@ -1,11 +1,12 @@
 /**
- * This file is responsible for implementing the data processing in a single file
+ * This file is responsible for implementing the data processing in a single file. In this case,
+ * the service implemented here is responsible for creating a new appointment inside the db
  */
+import { startOfHour } from 'date-fns';
+import {getCustomRepository} from 'typeorm';
+
 import Appointment from '../models/AppointmentsModel';
 import AppointmentsRepository  from '../repositories/AppointmentsRepository';
-import { startOfHour } from 'date-fns';
-
-
 
 interface CreateAppointmentServiceDTO {
     provider:string;
@@ -14,22 +15,26 @@ interface CreateAppointmentServiceDTO {
 }
 
 export default class CreateAppointmentService {
-    private AppointmentsRepository:AppointmentsRepository;
 
-    constructor(repository:AppointmentsRepository){
-        this.AppointmentsRepository = repository;
+  public async execute({provider,date}:CreateAppointmentServiceDTO): Promise<Appointment> {
+
+    const appointmentsRepository = getCustomRepository(AppointmentsRepository);
+
+    const appointmentHour = startOfHour(date);
+
+    const isBookedAppointment = await appointmentsRepository.findByDate(provider,appointmentHour);
+
+    if (isBookedAppointment) {
+        throw Error('This appointment time is already taken! Try another time:)')
     }
 
-    public execute({provider,date}:CreateAppointmentServiceDTO):Appointment {
+    const newAppointment = appointmentsRepository.create({
+      provider,
+      date:appointmentHour
+    });
 
-        const appointmentHour = startOfHour(date);
+    await appointmentsRepository.save(newAppointment);
 
-        const isBookedAppointment = this.AppointmentsRepository.findByDate(provider,appointmentHour);
-
-        if (isBookedAppointment) {
-            throw Error('This appointment time is already taken! Try another time:)')
-        }
-
-        return this.AppointmentsRepository.create({provider,date:appointmentHour});
-    }
+    return newAppointment;
+  }
 }

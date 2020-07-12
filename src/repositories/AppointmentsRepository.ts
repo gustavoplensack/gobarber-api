@@ -4,62 +4,21 @@
  * IMPORTANT:
  *  - Always remember to set a interface;
  */
-import Appointment from '../models/AppointmentsModel';
-import {isEqual} from 'date-fns'
+import {EntityRepository, Repository} from 'typeorm';
 
-interface AppointmentDTO {
-    provider:string;
+ import Appointment from '../models/AppointmentsModel';
 
-    date: Date;
-
-    id:string;
-}
-
-
-export default class AppointmentsRepository {
-    private appointments: Appointment[];
-
-    constructor(){
-        /**
-         * Instantiates the connection the DB, in this case the DB is kept
-         * in the memory during the run time
-         */
-        this.appointments = [];
-    }
-
-    /**
-     * all
-     */
-    public all():Appointment[] {
-        /**
-         * Returns all the appointments in the
-         * DB;
-         */
-        return this.appointments;
-    }
-
+@EntityRepository(Appointment)
+export default class AppointmentsRepository extends Repository<Appointment> {
     /**
      * findByDate
      */
-    public findByDate(provider:string, date:Date): Appointment | null {
+    public async findByDate(provider:string, date:Date): Promise<Appointment | null> {
+      const findAppointment = await this.findOne({
+        where:{date:date,
+        provider:provider}
+      });
 
-        const findAppointment = this.appointments.find(appointment =>{
-            if (isEqual(date,appointment.date) && provider == appointment.provider){
-                return true;
-            }
-        });
-
-        return findAppointment || null;
-    }
-
-    /**
-     * create
-     */
-    public create(data: Omit<AppointmentDTO,'id'>):Appointment {
-        const appointment = new Appointment(data);
-
-        this.appointments.push(appointment);
-
-        return appointment;
+      return findAppointment || null;
     }
 }

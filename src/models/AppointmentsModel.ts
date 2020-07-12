@@ -4,24 +4,16 @@
  * IMPORTANT:
  *  - Always remember to set a interface;
  */
-import {uuid} from 'uuidv4';
-
-interface AppointmentInstantiateDTO  {
-    provider: string;
-
-    date: Date;
-}
-
+import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm'
+@Entity('appointments')
 export default class Appointment{
-    id:string;
 
-    provider: string;
+  @PrimaryGeneratedColumn('uuid')
+  id:string;
 
-    date: Date;
+  @Column()
+  provider: string;
 
-    constructor({provider, date}:AppointmentInstantiateDTO){
-        this.id = uuid();
-        this.provider = provider;
-        this.date = date;
-    }
+  @Column('timestamp with time zone')
+  date: Date;
 }
