@@ -9,27 +9,27 @@ import Appointment from '../models/AppointmentsModel';
 import AppointmentsRepository  from '../repositories/AppointmentsRepository';
 
 interface CreateAppointmentServiceDTO {
-    provider:string;
+    provider_id:string;
 
     date:Date;
 }
 
 export default class CreateAppointmentService {
 
-  public async execute({provider,date}:CreateAppointmentServiceDTO): Promise<Appointment> {
+  public async execute({provider_id,date}:CreateAppointmentServiceDTO): Promise<Appointment> {
 
     const appointmentsRepository = getCustomRepository(AppointmentsRepository);
 
     const appointmentHour = startOfHour(date);
 
-    const isBookedAppointment = await appointmentsRepository.findByDate(provider,appointmentHour);
+    const isBookedAppointment = await appointmentsRepository.findByDate(provider_id,appointmentHour);
 
     if (isBookedAppointment) {
         throw Error('This appointment time is already taken! Try another time:)')
     }
 
     const newAppointment = appointmentsRepository.create({
-      provider,
+      provider_id,
       date:appointmentHour
     });
 

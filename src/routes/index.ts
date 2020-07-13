@@ -11,12 +11,14 @@ import { Router } from 'express';
 
 
 import AppointmentsRouter from './appointments.routes';
+import UsersRouter from './users.routes'
 
 const routes = Router();
 
 /**
  * Adding custom routes to the base of the router
  */
+routes.use('/users',UsersRouter);
 routes.use('/appointments',AppointmentsRouter);
 
 

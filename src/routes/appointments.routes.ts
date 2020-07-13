@@ -21,7 +21,7 @@ const AppointmentsRouter = Router();
 
 AppointmentsRouter.post('/',async (request,response)=>{
 
-  const {provider,date} = request.body;
+  const {provider_id,date} = request.body;
 
   const createAppointmentService = new CreateAppointmentService();
 
@@ -30,7 +30,7 @@ AppointmentsRouter.post('/',async (request,response)=>{
   try {
 
       const createdAppointment = await createAppointmentService.execute({
-          provider,
+          provider_id,
           date:dateAsJSDate
       });
 
