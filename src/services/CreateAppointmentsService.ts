@@ -8,6 +8,8 @@ import {getCustomRepository} from 'typeorm';
 import Appointment from '../models/AppointmentsModel';
 import AppointmentsRepository  from '../repositories/AppointmentsRepository';
 
+import AppError from '../error/AppError';
+
 interface CreateAppointmentServiceDTO {
     provider_id:string;
 
@@ -25,7 +27,7 @@ export default class CreateAppointmentService {
     const isBookedAppointment = await appointmentsRepository.findByDate(provider_id,appointmentHour);
 
     if (isBookedAppointment) {
-        throw Error('This appointment time is already taken! Try another time:)')
+        throw new AppError('This appointment time is already taken! Try another time:)',400);
     }
 
     const newAppointment = appointmentsRepository.create({

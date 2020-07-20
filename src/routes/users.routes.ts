@@ -26,21 +26,15 @@ UsersRouter.post('/',async (request,response)=>{
 
   const createUser = new CreateUserService();
 
-  try {
+  const newUser = await createUser.execute({
+    name,
+    email,
+    password
+  });
 
-    const newUser = await createUser.execute({
-      name,
-      email,
-      password
-    });
+  delete newUser.password;
 
-    delete newUser.password;
-
-    response.json(newUser);
-  }
-  catch (err) {
-    return response.status(400).json({error:err.message})
-  }
+  response.json(newUser);
 
 });
 
@@ -49,21 +43,17 @@ UsersRouter.patch('/avatar',
   upload.single('avatar'),
   async(request,response)=>{
 
-    try {
+    const updateUserAvatar = new UpdateUserAvatarService();
 
-      const updateUserAvatar = new UpdateUserAvatarService();
+    const user = await updateUserAvatar.execute({
+      userID:request.user.id,
+      avatarFileName:request.file.filename
+    });
 
-      const user = await updateUserAvatar.execute({
-        userID:request.user.id,
-        avatarFileName:request.file.filename
-      });
+    delete user.password;
 
-      delete user.password;
+    return response.json({user});
 
-      return response.json({user});
-    } catch(err){
-      return response.status(400).json({error:err.message})
-    }
 });
 
 export default UsersRouter;

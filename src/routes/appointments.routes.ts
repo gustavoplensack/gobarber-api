@@ -33,18 +33,12 @@ AppointmentsRouter.post('/',async (request,response)=>{
 
   const dateAsJSDate = parseISO(date);
 
-  try {
+  const createdAppointment = await createAppointmentService.execute({
+      provider_id,
+      date:dateAsJSDate
+  });
 
-      const createdAppointment = await createAppointmentService.execute({
-          provider_id,
-          date:dateAsJSDate
-      });
-
-      response.send(createdAppointment);
-  }
-  catch (err) {
-      return response.status(400).json({error:err.message})
-  }
+  response.send(createdAppointment);
 
 });
 

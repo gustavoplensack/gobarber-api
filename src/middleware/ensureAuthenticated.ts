@@ -6,6 +6,7 @@ import {Request,Response,NextFunction} from 'express';
 import {verify} from 'jsonwebtoken';
 
 import authConfig from '../config/auth';
+import AppError from '../error/AppError';
 
 interface TokenPaylod {
   iat:Number;
@@ -21,7 +22,7 @@ export default function ensureAuthenticated(
   const authHeader = request.headers.authorization;
 
   if (!authHeader){
-      throw new Error('JWT is missing in request.');
+      throw new AppError('JWT is missing in request.');
   }
 
   const [, token] = authHeader.split(' ');
@@ -39,7 +40,7 @@ export default function ensureAuthenticated(
     return next()
 
   } catch(err) {
-    throw new Error('Invalid JWT token.')
+    throw new AppError('Invalid JWT token.')
   }
 
 
