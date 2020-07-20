@@ -25,6 +25,9 @@ routes.use('/users',UsersRouter);
 routes.use('/appointments',AppointmentsRouter);
 routes.use('/sessions',SessionRouter);
 
+/**
+ * Global error handling middleware
+ */
 routes.use((err:Error,request:Request,response:Response,_:NextFunction)=>{
     if (err instanceof AppError){
         // Expected app errors
