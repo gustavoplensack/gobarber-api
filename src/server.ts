@@ -1,10 +1,14 @@
 import express from 'express';
 import routes from './routes';
+import cors from 'cors';
 
 import './database';
 import uploadConfig from './config/upload';
 
 const app = express();
+
+//Using cors to restrict web frontend access
+app.use(cors());
 
 /**
  * Allowing usage of json data in the returns
