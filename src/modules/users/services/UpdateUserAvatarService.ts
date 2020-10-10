@@ -2,8 +2,8 @@ import path from 'path';
 import fs from 'fs';
 import {getRepository} from 'typeorm';
 
-import User from '../models/UsersModel';
-import uploadConfig from '../config/upload';
+import User from '../infra/typeorm/entities/UsersModel';
+import uploadConfig from '@config/upload';
 
 
 interface Request {

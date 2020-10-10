@@ -11,10 +11,10 @@ import { Router, Response, Request, NextFunction } from 'express';
 import 'express-async-errors';
 
 
-import AppointmentsRouter from './appointments.routes';
-import UsersRouter from './users.routes';
-import SessionRouter from './sessions.routes';
-import AppError from '../error/AppError';
+import AppointmentsRouter from '@modules/appointments/infra/http/routes/appointments.routes';
+import UsersRouter from '@modules/users/infra/http/routes/users.routes';
+import SessionRouter from '@modules/users/infra/http/routes/sessions.routes';
+import AppError from '@shared/error/AppError';
 
 const routes = Router();
 

@@ -2,7 +2,7 @@
  * Route for dealing with the sessions inside the app
  */
 import { Router, response, request } from 'express';
-import AuthenticateUserService from '../services/AuthenticateUserService'
+import AuthenticateUserService from '@modules/users/services/AuthenticateUserService'
 
 const SessionsRouter = Router();
 

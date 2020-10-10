@@ -1,9 +1,9 @@
 import express from 'express';
-import routes from './routes';
+import routes from '@shared/infra/http/routes/index'
 import cors from 'cors';
 
-import './database';
-import uploadConfig from './config/upload';
+import '@shared/infra/typeorm';
+import uploadConfig from '@config/upload'
 
 const app = express();
 

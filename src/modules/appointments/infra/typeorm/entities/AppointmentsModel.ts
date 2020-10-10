@@ -13,7 +13,8 @@ import {Entity,
   ManyToOne
 } from 'typeorm'
 
-import User  from './UsersModel'
+import User  from '@modules/users/infra/typeorm/entities/UsersModel'
+
 @Entity('appointments')
 export default class Appointment{
 
