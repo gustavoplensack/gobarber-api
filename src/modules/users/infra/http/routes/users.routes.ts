@@ -8,7 +8,7 @@
  * For the API with databases, use the src/repositpories and src/models;
  *
  */
-import { Router, response, request } from 'express';
+import { Router } from 'express';
 import multer from 'multer';
 import uploadConfig from '@config/upload';
 
@@ -20,40 +20,38 @@ const UsersRouter = Router();
 
 const upload = multer(uploadConfig);
 
-UsersRouter.post('/',async (request,response)=>{
-
-  const {name, email, password} = request.body;
+UsersRouter.post('/', async (request, response) => {
+  const { name, email, password } = request.body;
 
   const createUser = new CreateUserService();
 
   const newUser = await createUser.execute({
     name,
     email,
-    password
+    password,
   });
 
   delete newUser.password;
 
   response.json(newUser);
-
 });
 
-UsersRouter.patch('/avatar',
+UsersRouter.patch(
+  '/avatar',
   ensureAuthenticated,
   upload.single('avatar'),
-  async(request,response)=>{
-
+  async (request, response) => {
     const updateUserAvatar = new UpdateUserAvatarService();
 
     const user = await updateUserAvatar.execute({
-      userID:request.user.id,
-      avatarFileName:request.file.filename
+      userID: request.user.id,
+      avatarFileName: request.file.filename,
     });
 
     delete user.password;
 
-    return response.json({user});
-
-});
+    return response.json({ user });
+  },
+);
 
 export default UsersRouter;
