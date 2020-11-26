@@ -1,55 +1,53 @@
 /**
  * Service to deal with the user authentication task
  */
-import {getRepository} from 'typeorm';
-import {compare} from 'bcryptjs';
-import {sign} from 'jsonwebtoken';
+import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 
-import User from '../infra/typeorm/entities/UsersModel';
-import authConfig from '@config/auth'
+import authConfig from '@config/auth';
 
 import AppError from '@shared/error/AppError';
+import IUsersRepository from '../repositories/IUsersRepository';
+import User from '../infra/typeorm/entities/UsersModel';
 
-interface  Request {
-  email:string;
-  password:string;
+interface IRequest {
+  email: string;
+  password: string;
 }
 
-interface  Response {
-  user:User;
-  token:string;
+interface IResponse {
+  user: User;
+  token: string;
 }
 
 class AuthenticateUserService {
-  public async execute({email,password}:Request):Promise<Response> {
-    const usersRepository = getRepository(User);
+  constructor(private usersRepository: IUsersRepository) {}
 
-    const user = await usersRepository.findOne({where:{email}});
+  public async execute({ email, password }: IRequest): Promise<IResponse> {
+    const user = await this.usersRepository.findByEmail(email);
 
-    if (!user){
-      throw new AppError('Incorrect email/password combination.',401);
+    if (!user) {
+      throw new AppError('Incorrect email/password combination.', 401);
     }
 
-    const passwordMatched = await compare(password,user.password);
+    const passwordMatched = await compare(password, user.password);
 
-    if(!passwordMatched){
-      throw new AppError('Incorrect email/password combinattion.',401);
+    if (!passwordMatched) {
+      throw new AppError('Incorrect email/password combinattion.', 401);
     }
 
-    const {secret,expiresIn} = authConfig.jwt;
+    const { secret, expiresIn } = authConfig.jwt;
 
-    const token = sign({},secret,{
-      subject:user.id,
+    const token = sign({}, secret, {
+      subject: user.id,
       expiresIn,
-    })
+    });
 
     return {
       user,
-      token
+      token,
     };
-
   }
 }
-
 
 export default AuthenticateUserService;

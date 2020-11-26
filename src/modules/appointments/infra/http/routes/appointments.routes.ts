@@ -8,44 +8,39 @@
  * For the API with databases, use the src/repositpories and src/models;
  *
  */
-import { Router, response, request } from 'express';
-import {getCustomRepository} from 'typeorm';
+import { Router } from 'express';
 import { parseISO } from 'date-fns';
 
-import AppointmentsRepository from '@modules/appointments/repositories/AppointmentsRepository'
+import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
 import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentsService';
 
 import ensureAuthenticated from '@modules/users/infra/middleware/ensureAuthenticated';
 
 const AppointmentsRouter = Router();
 
+const appointmentsRepository = new AppointmentsRepository();
 /*
  * Ensuring usage of authenticated routes
  * for the appointments.
-*/
+ */
 AppointmentsRouter.use(ensureAuthenticated);
 
-AppointmentsRouter.post('/',async (request,response)=>{
+AppointmentsRouter.post('/', async (request, response) => {
+  // eslint-disable-next-line camelcase
+  const { provider_id, date } = request.body;
 
-  const {provider_id,date} = request.body;
-
-  const createAppointmentService = new CreateAppointmentService();
+  const createAppointmentService = new CreateAppointmentService(
+    appointmentsRepository,
+  );
 
   const dateAsJSDate = parseISO(date);
 
   const createdAppointment = await createAppointmentService.execute({
-      provider_id,
-      date:dateAsJSDate
+    provider_id,
+    date: dateAsJSDate,
   });
 
   response.send(createdAppointment);
-
 });
-
-AppointmentsRouter.get('/',async (request,response)=>{
-  const appointmentRepo = getCustomRepository(AppointmentsRepository);
-  response.send({appointments:await appointmentRepo.find()})
-})
-
 
 export default AppointmentsRouter;

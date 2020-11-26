@@ -19,14 +19,27 @@
         "prettier"
     ],
     "rules": {
-	   	"import/extensions": [
-	      "error",
+      "import/extensions": [
+        "error",
 	      "ignorePackages",
 	      {
-	        "ts": "never"
+          "ts": "never"
 	      }
-        ],
-        "prettier/prettier": "error"
+      ],
+      "no-useless-constructor":"off",
+      "prettier/prettier": "error",
+        "camelcase": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "interface",
+            "format": ["PascalCase"],
+            "custom": {
+              "regex": "^I[A-Z]",
+              "match": true
+            }
+          }
+        ]
 	  },
 	  "settings": {
 	    "import/resolver": {

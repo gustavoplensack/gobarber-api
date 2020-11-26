@@ -3,39 +3,39 @@
  * the service implemented here is responsible for creating a new appointment inside the db
  */
 import { startOfHour } from 'date-fns';
-import {getCustomRepository} from 'typeorm';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/AppointmentsModel';
-import AppointmentsRepository  from '../repositories/AppointmentsRepository';
-
 import AppError from '@shared/error/AppError';
+import IAppointmentsRepository from '../repositories/IAppointmensRepository';
 
-interface CreateAppointmentServiceDTO {
-    provider_id:string;
+import '@modules/appointments/dtos/ICreateAppointmentsDTO';
 
-    date:Date;
+interface IRequest {
+  provider_id: string;
+  date: Date;
 }
 
 export default class CreateAppointmentService {
+  constructor(private appointmentsRepository: IAppointmentsRepository) {}
 
-  public async execute({provider_id,date}:CreateAppointmentServiceDTO): Promise<Appointment> {
-
-    const appointmentsRepository = getCustomRepository(AppointmentsRepository);
-
+  public async execute({ provider_id, date }: IRequest): Promise<Appointment> {
     const appointmentHour = startOfHour(date);
 
-    const isBookedAppointment = await appointmentsRepository.findByDate(provider_id,appointmentHour);
+    const isBookedAppointment = await this.appointmentsRepository.findByDate(
+      appointmentHour,
+    );
 
     if (isBookedAppointment) {
-        throw new AppError('This appointment time is already taken! Try another time:)',400);
+      throw new AppError(
+        'This appointment time is already taken! Try another time:)',
+        400,
+      );
     }
 
-    const newAppointment = appointmentsRepository.create({
+    const newAppointment = this.appointmentsRepository.create({
       provider_id,
-      date:appointmentHour
+      date: appointmentHour,
     });
-
-    await appointmentsRepository.save(newAppointment);
 
     return newAppointment;
   }
