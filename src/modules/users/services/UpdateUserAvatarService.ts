@@ -1,11 +1,9 @@
-import path from 'path';
-import fs from 'fs';
-
-import uploadConfig from '@config/upload';
-
+import 'reflect-metadata';
 import { inject, injectable } from 'tsyringe';
 
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
+import AppError from '@shared/error/AppError';
+
 import IUsersRepository from '../repositories/IUsersRepository';
 
 import User from '../infra/typeorm/entities/UsersModel';
@@ -29,7 +27,7 @@ export default class UpdateUserAvatarService {
 
     // Check if the user exists
     if (!user) {
-      throw new Error('Only authenticated users can change avatar!');
+      throw new AppError('Only authenticated users can change avatar!');
     }
 
     // Updating if avatar already exists, in this case old is deleted
