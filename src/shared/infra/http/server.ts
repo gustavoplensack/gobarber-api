@@ -19,7 +19,7 @@ app.use(express.json());
 /*
  * Using static files
  */
-app.use('/files', express.static(uploadConfig.dir));
+app.use('/files', express.static(uploadConfig.uploadsFolder));
 
 /*
  * Using custom routes

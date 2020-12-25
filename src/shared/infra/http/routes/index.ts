@@ -13,6 +13,7 @@ import 'express-async-errors';
 import AppointmentsRouter from '@modules/appointments/infra/http/routes/appointments.routes';
 import UsersRouter from '@modules/users/infra/http/routes/users.routes';
 import SessionRouter from '@modules/users/infra/http/routes/sessions.routes';
+import PasswordRouter from '@modules/users/infra/http/routes/password.routes';
 import AppError from '@shared/error/AppError';
 
 const routes = Router();
@@ -23,6 +24,7 @@ const routes = Router();
 routes.use('/users', UsersRouter);
 routes.use('/appointments', AppointmentsRouter);
 routes.use('/sessions', SessionRouter);
+routes.use('/password', PasswordRouter);
 
 /**
  * Global error handling middleware

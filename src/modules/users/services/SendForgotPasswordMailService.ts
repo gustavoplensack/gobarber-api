@@ -30,8 +30,8 @@ export default class SendForgotPasswordMailService {
       throw new AppError('User not found!');
     }
 
-    await this.userTokensRepository.generate(foundUser.id);
+    const { token } = await this.userTokensRepository.generate(foundUser.id);
 
-    this.mailProvider.sendMail(email, 'Recupere sua senha');
+    await this.mailProvider.sendMail(email, `Recupere sua senha: ${token}`);
   }
 }
