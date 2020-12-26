@@ -37,6 +37,31 @@ describe('UpdateProfile', () => {
     expect(updatedUser.email).toBe('jose@dasalfaces.email.com');
   });
 
+  it('should throw app error if user_id does not exist', async () => {
+    const userData = {
+      email: 'jose@dascouves.email.com',
+      name: 'jose',
+      password: 'couves',
+    };
+
+    const anotherUserData = {
+      email: 'joselito@dasalfaces.email.com',
+      name: 'joseito',
+      password: 'alfaces',
+    };
+
+    await fakeUsersRepository.create(userData);
+    const anotherUser = await fakeUsersRepository.create(anotherUserData);
+
+    await expect(
+      updateProfile.execute({
+        user_id: 'invalid-user-id',
+        email: anotherUser.email,
+        name: 'jose',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
   it('should not be able to use an already taken email', async () => {
     const userData = {
       email: 'jose@dascouves.email.com',

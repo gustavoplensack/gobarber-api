@@ -11,7 +11,7 @@
 import 'reflect-metadata';
 import { Router } from 'express';
 
-import ensureAuthenticated from '@modules/users/infra/middleware/ensureAuthenticated';
+import EnsureAuthenticated from '@modules/users/infra/middleware/EnsureAuthenticated';
 import AppointmentsController from '../controllers/AppointmentController';
 
 const appointmentsController = new AppointmentsController();
@@ -22,7 +22,7 @@ const AppointmentsRouter = Router();
  * Ensuring usage of authenticated routes
  * for the appointments.
  */
-AppointmentsRouter.use(ensureAuthenticated);
+AppointmentsRouter.use(EnsureAuthenticated);
 
 AppointmentsRouter.post('/', appointmentsController.create);
 

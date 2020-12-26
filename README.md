@@ -16,29 +16,27 @@ API do projeto desenvolvido durante o Bootcamp GoStack11 da Rockeseat.
 
 **RF:**
 
-* [ ] O usuário deve poder recuperar sua senha com o seu e-mail;
-* [ ] O usuário deve receber um email com as instruções para recuperar a senha;
-* [ ] O usuário deve poder resetar sua senha;
+* [x] O usuário deve poder recuperar sua senha com o seu e-mail;
+* [x] O usuário deve receber um email com as instruções para recuperar a senha;
+* [x] O usuário deve poder resetar sua senha;
 
 **RNF:**
 
-* [ ] Utilizar mailtrap para testar envio de emails em desenvolvimento;
+* [x] Utilizar mailtrap para testar envio de emails em desenvolvimento;
 * [ ] Utilzar Amazon SES para envios em produção;
 * [ ] O envio de emails deve acontecer em segundo plano (como se fosse um background job);
 
 
 **RN:**
 
-* [ ] O link enviado por email para reset da senha deve expirar em duas horas;
+* [x] O link enviado por email para reset da senha deve expirar em duas horas;
 * [ ] O usuário precisa confirmar a nova senha ao resetar;
-* [ ] O usuário não deve poder usar a senha antiga ao resetar a senha;
 
 ## Atualização do perfil
 
 **RF:**
 
-* [ ] O usuário deve poder atualizar seu nome, email e senha;
-* [ ] A nova senha não pode ser igual à atual;
+* [x] O usuário deve poder atualizar seu nome, email e senha;
 
 **RNF:**
 
@@ -46,8 +44,8 @@ N/A
 
 **RN:**
 
-* [ ] O novo email não pode ser o mesmo já usado por outro usuário;
-* [ ] Para atualizar sua senha, ele deve fornecer a antiga;
+* [x] O novo email não pode ser o mesmo já usado por outro usuário;
+* [x] Para atualizar sua senha, ele deve fornecer a antiga;
 * [ ] A nova senha deve ser confirmada;
 
 ## Painel do Prestador
