@@ -20,6 +20,6 @@ export default class AppointmentController {
       date: dateAsJSDate,
     });
 
-    return createdAppointment;
+    return response.json(createdAppointment);
   }
 }
