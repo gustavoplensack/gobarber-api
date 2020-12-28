@@ -4,11 +4,14 @@
  * IMPORTANT:
  *  - Always remember to set a interface;
  */
-import { Repository, getRepository } from 'typeorm';
+import { Repository, getRepository, Raw } from 'typeorm';
 
 import IAppointemntsRepository from '@modules/appointments/repositories/IAppointmensRepository';
 
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentsDTO';
+import IFindAllInMonthFromProviderDTO from '@modules/appointments/dtos/IFindAllInMonthFromProviderDTO';
+import IFindAllInDayFromProviderDTO from '@modules/appointments/dtos/IFindAllInDayFromProviderDTO';
+import { da } from 'date-fns/locale';
 import Appointment from '../entities/AppointmentsModel';
 
 class AppointmentsRepository implements IAppointemntsRepository {
@@ -18,8 +21,49 @@ class AppointmentsRepository implements IAppointemntsRepository {
     this.ormRepository = getRepository(Appointment);
   }
 
+  public async findAllInMonthFromProvider({
+    provider_id,
+    month,
+    year,
+  }: IFindAllInMonthFromProviderDTO): Promise<Appointment[]> {
+    const paddedMonth = String(month).padStart(2, '0');
+
+    const appointments = await this.ormRepository.find({
+      where: {
+        provider_id,
+        date: Raw(
+          dateFieldName =>
+            `to_char(${dateFieldName}, MM-YYYY) = '${paddedMonth}-${year}'`,
+        ),
+      },
+    });
+
+    return appointments;
+  }
+
+  public async findAllInDayFromProvider({
+    provider_id,
+    day,
+    month,
+    year,
+  }: IFindAllInDayFromProviderDTO): Promise<Appointment[]> {
+    const paddedDay = String(day).padStart(2, '0');
+    const paddedMonth = String(month).padStart(2, '0');
+
+    const appointments = await this.ormRepository.find({
+      where: {
+        provider_id,
+        date: Raw(
+          dateFieldName =>
+            `to_char(${dateFieldName}, DD-MM-YYYY) = '${paddedDay}-${paddedMonth}-${year}'`,
+        ),
+      },
+    });
+
+    return appointments;
+  }
+
   public async create({
-    // eslint-disable-next-line camelcase
     provider_id,
     date,
   }: ICreateAppointmentDTO): Promise<Appointment> {
