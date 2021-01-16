@@ -11,7 +11,6 @@ import IAppointemntsRepository from '@modules/appointments/repositories/IAppoint
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentsDTO';
 import IFindAllInMonthFromProviderDTO from '@modules/appointments/dtos/IFindAllInMonthFromProviderDTO';
 import IFindAllInDayFromProviderDTO from '@modules/appointments/dtos/IFindAllInDayFromProviderDTO';
-import { da } from 'date-fns/locale';
 import Appointment from '../entities/AppointmentsModel';
 
 class AppointmentsRepository implements IAppointemntsRepository {
