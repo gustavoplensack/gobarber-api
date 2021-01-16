@@ -12,7 +12,11 @@ describe('CreateAppointment', () => {
       fakeAppointmentsRepository,
     );
   });
+
   it('should be able to create a new appointment', async () => {
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2000, 0, 1, 12).getTime();
+    });
     const appointment = await createAppointments.execute({
       date: new Date(),
       provider_id: '123123',
@@ -24,7 +28,11 @@ describe('CreateAppointment', () => {
   });
 
   it('should not be able to create two appointments on the same time', async () => {
-    const appointmentDate = new Date(2020, 4, 10, 11);
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2000, 0, 1, 12).getTime();
+    });
+
+    const appointmentDate = new Date();
 
     await createAppointments.execute({
       date: appointmentDate,
@@ -32,7 +40,7 @@ describe('CreateAppointment', () => {
       customer_id: '1111111',
     });
 
-    expect(
+    await expect(
       createAppointments.execute({
         date: appointmentDate,
         provider_id: '123123',
@@ -41,14 +49,30 @@ describe('CreateAppointment', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to create an appointments with itself', async () => {
-    const appointmentDate = new Date(2020, 4, 10, 11);
+  it('should not be able to create an appointments with yourself', async () => {
+    const appointmentDate = new Date();
 
-    expect(
+    await expect(
       createAppointments.execute({
         date: appointmentDate,
         provider_id: '123123',
         customer_id: '123123',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to create an appointment in a past date', async () => {
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2021, 0, 1, 12).getTime();
+    });
+
+    const appointmentDate = new Date(2020, 0, 1, 12);
+
+    await expect(
+      createAppointments.execute({
+        date: appointmentDate,
+        provider_id: '123123',
+        customer_id: '111111',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
