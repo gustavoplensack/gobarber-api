@@ -13,17 +13,28 @@ import { Router } from 'express';
 
 import EnsureAuthenticated from '@modules/users/infra/middleware/EnsureAuthenticated';
 import ProvidersController from '../controllers/ProvidersController';
+import ProviderMonthAvailabilityController from '../controllers/ProviderMonthAvailabilityController';
+import ProviderDayAvailabilityController from '../controllers/ProviderDayAvailabilityController';
 
-const ProviderController = new ProvidersController();
+const providerController = new ProvidersController();
+const monthAvailabilityController = new ProviderMonthAvailabilityController();
+const dayAvailabilityController = new ProviderDayAvailabilityController();
 
-const ProvidersRouter = Router();
+const providersRouter = Router();
 
 /*
  * Ensuring usage of authenticated routes
  * for the appointments.
  */
-ProvidersRouter.use(EnsureAuthenticated);
+providersRouter.use(EnsureAuthenticated);
 
-ProvidersRouter.get('/', ProviderController.index);
+providersRouter.get('/', providerController.index);
 
-export default ProvidersRouter;
+providersRouter.get(
+  '/:id/month-availability',
+  monthAvailabilityController.index,
+);
+
+providersRouter.get('/:id/day-availability', dayAvailabilityController.index);
+
+export default providersRouter;
