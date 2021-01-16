@@ -2,7 +2,7 @@
  * This file is responsible for implementing the data processing in a single file. In this case,
  * the service implemented here is responsible for creating a new appointment inside the db
  */
-import { startOfHour, isBefore } from 'date-fns';
+import { startOfHour, isBefore, getHours } from 'date-fns';
 import { injectable, inject } from 'tsyringe';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/AppointmentsModel';
@@ -30,6 +30,13 @@ export default class CreateAppointmentService {
     date,
   }: IRequest): Promise<Appointment> {
     const appointmentHour = startOfHour(date);
+
+    if (getHours(appointmentHour) < 8 || getHours(appointmentHour) > 17) {
+      throw new AppError(
+        "Can't book out of business hours! book them between 8AM and 5PM",
+        400,
+      );
+    }
 
     if (isBefore(appointmentHour, Date.now())) {
       throw new AppError(`Can't book an apppointment in a past date`, 400);

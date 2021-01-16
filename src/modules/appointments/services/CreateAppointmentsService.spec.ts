@@ -61,6 +61,24 @@ describe('CreateAppointment', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
+  it('should not be able to book appointments out of business hours', async () => {
+    await expect(
+      createAppointments.execute({
+        customer_id: '111111',
+        provider_id: '123123',
+        date: new Date(2020, 0, 2, 7),
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+
+    await expect(
+      createAppointments.execute({
+        customer_id: '111111',
+        provider_id: '123123',
+        date: new Date(2020, 0, 2, 18),
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
   it('should not be able to create an appointment in a past date', async () => {
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
       return new Date(2021, 0, 1, 12).getTime();
