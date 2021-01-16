@@ -18,14 +18,20 @@ describe('ListProviderDayAvailability', () => {
       id: '123456',
     };
 
+    const cusomerData = {
+      id: '111111',
+    };
+
     await fakeAppointmentsRepository.create({
       provider_id: providerData.id,
       date: new Date(2021, 1, 1, 13, 0, 0),
+      customer_id: cusomerData.id,
     });
 
     await fakeAppointmentsRepository.create({
       provider_id: providerData.id,
       date: new Date(2021, 1, 1, 14, 0, 0),
+      customer_id: cusomerData.id,
     });
 
     // mocks Date.now implementation for this test

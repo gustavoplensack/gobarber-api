@@ -11,8 +11,10 @@ import IAppointmentsRepository from '../repositories/IAppointmensRepository';
 
 import '@modules/appointments/dtos/ICreateAppointmentsDTO';
 
+// NOTE: the customer id is equivalent to the current user id
 interface IRequest {
   provider_id: string;
+  customer_id: string;
   date: Date;
 }
 @injectable()
@@ -22,7 +24,11 @@ export default class CreateAppointmentService {
     private appointmentsRepository: IAppointmentsRepository,
   ) {}
 
-  public async execute({ provider_id, date }: IRequest): Promise<Appointment> {
+  public async execute({
+    provider_id,
+    customer_id,
+    date,
+  }: IRequest): Promise<Appointment> {
     const appointmentHour = startOfHour(date);
 
     const isBookedAppointment = await this.appointmentsRepository.findByDate(
@@ -38,6 +44,7 @@ export default class CreateAppointmentService {
 
     const newAppointment = this.appointmentsRepository.create({
       provider_id,
+      customer_id,
       date: appointmentHour,
     });
 
