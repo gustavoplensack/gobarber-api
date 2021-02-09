@@ -13,8 +13,10 @@ import { Router } from 'express';
 
 import EnsureAuthenticated from '@modules/users/infra/middleware/EnsureAuthenticated';
 import AppointmentsController from '../controllers/AppointmentController';
+import ProviderAppointmentsController from '../controllers/ProviderAppointmentsController';
 
 const appointmentsController = new AppointmentsController();
+const providerAppointmentsController = new ProviderAppointmentsController();
 
 const AppointmentsRouter = Router();
 
@@ -24,6 +26,8 @@ const AppointmentsRouter = Router();
  */
 AppointmentsRouter.use(EnsureAuthenticated);
 
+// Controller routing
 AppointmentsRouter.post('/', appointmentsController.create);
+AppointmentsRouter.get('/me', providerAppointmentsController.index);
 
 export default AppointmentsRouter;
