@@ -18,7 +18,7 @@ describe('CreateAppointment', () => {
       return new Date(2000, 0, 1, 12).getTime();
     });
     const appointment = await createAppointments.execute({
-      date: new Date(),
+      date: new Date(2020, 0, 1, 13),
       provider_id: '123123',
       customer_id: '111111',
     });
@@ -32,7 +32,7 @@ describe('CreateAppointment', () => {
       return new Date(2000, 0, 1, 12).getTime();
     });
 
-    const appointmentDate = new Date();
+    const appointmentDate = new Date(2020, 0, 1, 12);
 
     await createAppointments.execute({
       date: appointmentDate,
