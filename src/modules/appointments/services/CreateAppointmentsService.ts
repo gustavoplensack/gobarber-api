@@ -2,11 +2,12 @@
  * This file is responsible for implementing the data processing in a single file. In this case,
  * the service implemented here is responsible for creating a new appointment inside the db
  */
-import { startOfHour, isBefore, getHours } from 'date-fns';
+import { startOfHour, isBefore, getHours, format } from 'date-fns';
 import { injectable, inject } from 'tsyringe';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/AppointmentsModel';
 import AppError from '@shared/error/AppError';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import IAppointmentsRepository from '../repositories/IAppointmensRepository';
 
 import '@modules/appointments/dtos/ICreateAppointmentsDTO';
@@ -22,6 +23,9 @@ export default class CreateAppointmentService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
+
+    @inject('NotificationsRepository')
+    private notificationsRepository: INotificationsRepository,
   ) {}
 
   public async execute({
@@ -57,10 +61,16 @@ export default class CreateAppointmentService {
       );
     }
 
-    const newAppointment = this.appointmentsRepository.create({
+    const newAppointment = await this.appointmentsRepository.create({
       provider_id,
       customer_id,
-      date: appointmentHour,
+      date,
+    });
+
+    const dateFormatted = format(newAppointment.date, "dd/MM/yyyy 'às' HH:mm");
+    await this.notificationsRepository.create({
+      recipient_id: provider_id,
+      content: `Novo agendamente para ${dateFormatted}!`,
     });
 
     return newAppointment;
