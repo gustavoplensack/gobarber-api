@@ -1,16 +1,18 @@
+import { errors } from 'celebrate';
 import express from 'express';
-import routes from '@shared/infra/http/routes/index';
 import cors from 'cors';
 
 import '@shared/infra/typeorm';
-import uploadConfig from '@config/upload';
+import routes from '@shared/infra/http/routes/index';
 import '@shared/container';
+import uploadConfig from '@config/upload';
 
 const app = express();
 
 // Using cors to restrict web frontend access
 app.use(cors());
 
+app.use(errors());
 /**
  * Allowing usage of json data in the returns
  */

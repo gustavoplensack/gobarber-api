@@ -10,6 +10,7 @@
  */
 import 'reflect-metadata';
 import { Router } from 'express';
+import { celebrate, Segments, Joi } from 'celebrate';
 
 import EnsureAuthenticated from '@modules/users/infra/middleware/EnsureAuthenticated';
 import ProvidersController from '../controllers/ProvidersController';
@@ -32,9 +33,22 @@ providersRouter.get('/', providerController.index);
 
 providersRouter.get(
   '/:id/month-availability',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().required().uuid(),
+    },
+  }),
   monthAvailabilityController.index,
 );
 
-providersRouter.get('/:id/day-availability', dayAvailabilityController.index);
+providersRouter.get(
+  '/:id/day-availability',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().required().uuid(),
+    },
+  }),
+  dayAvailabilityController.index,
+);
 
 export default providersRouter;

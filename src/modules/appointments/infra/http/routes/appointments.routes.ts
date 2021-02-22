@@ -10,6 +10,7 @@
  */
 import 'reflect-metadata';
 import { Router } from 'express';
+import { celebrate, Segments, Joi } from 'celebrate';
 
 import EnsureAuthenticated from '@modules/users/infra/middleware/EnsureAuthenticated';
 import AppointmentsController from '../controllers/AppointmentController';
@@ -27,7 +28,16 @@ const AppointmentsRouter = Router();
 AppointmentsRouter.use(EnsureAuthenticated);
 
 // Controller routing
-AppointmentsRouter.post('/', appointmentsController.create);
+AppointmentsRouter.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      provider_id: Joi.string().uuid().required(),
+      date: Joi.date(),
+    },
+  }),
+  appointmentsController.create,
+);
 AppointmentsRouter.get('/me', providerAppointmentsController.index);
 
 export default AppointmentsRouter;
