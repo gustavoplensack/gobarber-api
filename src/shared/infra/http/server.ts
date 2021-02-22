@@ -1,5 +1,6 @@
 import { errors } from 'celebrate';
 import express from 'express';
+import 'dotenv/config';
 import cors from 'cors';
 
 import '@shared/infra/typeorm';
