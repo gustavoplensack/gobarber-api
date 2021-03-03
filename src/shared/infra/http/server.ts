@@ -8,7 +8,12 @@ import routes from '@shared/infra/http/routes/index';
 import '@shared/container';
 import uploadConfig from '@config/upload';
 
+import rateLimiter from './middlewares/rateLimiter';
+
 const app = express();
+
+// Use rate limiter middleware
+app.use(rateLimiter);
 
 // Using cors to restrict web frontend access
 app.use(cors());
