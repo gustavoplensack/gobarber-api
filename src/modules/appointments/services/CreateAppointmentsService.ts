@@ -5,9 +5,11 @@
 import { startOfHour, isBefore, getHours, format } from 'date-fns';
 import { injectable, inject } from 'tsyringe';
 
-import Appointment from '@modules/appointments/infra/typeorm/entities/AppointmentsModel';
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 import AppError from '@shared/error/AppError';
+import Appointment from '@modules/appointments/infra/typeorm/entities/AppointmentsModel';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+
 import IAppointmentsRepository from '../repositories/IAppointmensRepository';
 
 import '@modules/appointments/dtos/ICreateAppointmentsDTO';
@@ -26,6 +28,9 @@ export default class CreateAppointmentService {
 
     @inject('NotificationsRepository')
     private notificationsRepository: INotificationsRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
@@ -72,6 +77,10 @@ export default class CreateAppointmentService {
       recipient_id: provider_id,
       content: `Novo agendamente para ${dateFormatted}!`,
     });
+
+    await this.cacheProvider.invalidate(
+      `provider-appointments:${provider_id}:${format(date, 'yyyy-M-d')}`,
+    );
 
     return newAppointment;
   }

@@ -3,11 +3,9 @@ import AppError from '@shared/error/AppError';
 import FakeUserRepository from '../repositories/fakes/FakeUserRepository';
 import FakeHashProvider from '../providers/fakes/FakeHashProvider';
 import AuthenticateUserService from './AuthenticateUserService';
-import CreateUserService from './CreateUserServices';
 
 let fakeUserRepository: FakeUserRepository;
 let fakeHashProvider: FakeHashProvider;
-let createUser: CreateUserService;
 let authenticateUser: AuthenticateUserService;
 
 describe('AuthenticateUser', () => {
@@ -15,7 +13,6 @@ describe('AuthenticateUser', () => {
     fakeUserRepository = new FakeUserRepository();
     fakeHashProvider = new FakeHashProvider();
 
-    createUser = new CreateUserService(fakeUserRepository, fakeHashProvider);
     authenticateUser = new AuthenticateUserService(
       fakeUserRepository,
       fakeHashProvider,
@@ -33,7 +30,7 @@ describe('AuthenticateUser', () => {
       password: 'couves',
     };
 
-    const user = await createUser.execute(newUserData);
+    const user = await fakeUserRepository.create(newUserData);
 
     const response = await authenticateUser.execute(authUserData);
 
@@ -53,7 +50,7 @@ describe('AuthenticateUser', () => {
       password: 'WrongPassword',
     };
 
-    const user = await createUser.execute(newUserData);
+    const user = await fakeUserRepository.create(newUserData);
 
     expect(user.password).toBe(newUserData.password);
     await expect(authenticateUser.execute(authUserData)).rejects.toBeInstanceOf(

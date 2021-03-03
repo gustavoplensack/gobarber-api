@@ -1,19 +1,23 @@
 import AppError from '@shared/error/AppError';
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeNotificationsRepositoty from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppoitmentsRepository';
 import CreateAppointmentsService from './CreateAppointmentsService';
 
+let fakeCacheProvider: FakeCacheProvider;
 let fakeAppointmentsRepository: FakeAppointmentsRepository;
 let fakeNotificationsRepositoty: FakeNotificationsRepositoty;
 let createAppointments: CreateAppointmentsService;
 
 describe('CreateAppointment', () => {
   beforeEach(() => {
+    fakeCacheProvider = new FakeCacheProvider();
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
     fakeNotificationsRepositoty = new FakeNotificationsRepositoty();
     createAppointments = new CreateAppointmentsService(
       fakeAppointmentsRepository,
       fakeNotificationsRepositoty,
+      fakeCacheProvider,
     );
   });
 

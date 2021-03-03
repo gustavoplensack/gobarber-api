@@ -31,6 +31,7 @@
       "no-useless-constructor":"off",
       "prettier/prettier": "error",
         "camelcase": "off",
+        "@typescript-eslint/no-explicit-any":"off",
         "@typescript-eslint/naming-convention": [
           "error",
           {

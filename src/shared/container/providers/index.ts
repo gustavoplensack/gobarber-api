@@ -10,3 +10,6 @@ import './MailProvider';
 
 // Register StorageProvider
 import './StorageProvider';
+
+// Register Cache Provider
+import './CacheProvider';
