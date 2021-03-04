@@ -57,6 +57,7 @@ export default class CreateAppointmentService {
 
     const isBookedAppointment = await this.appointmentsRepository.findByDate(
       appointmentHour,
+      provider_id,
     );
 
     if (isBookedAppointment) {
