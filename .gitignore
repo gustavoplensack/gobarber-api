@@ -4,3 +4,9 @@ tmp/*
 coverage/
 
 !tmp/.gitkeep
+
+# Built project
+dist/*
+
+# ormconfig info
+ormconfig.json
